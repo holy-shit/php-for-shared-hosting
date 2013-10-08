@@ -3,17 +3,30 @@ php-for-shared-hosting
 
 PHP installation script for shared hostings (Dreamhost, TimeWeb, etc)
 
+Download this script, chmod a+x it and run. It should "just work".
+
+Credits
+=======
+
 Originally it was php5.4-install.sh from http://wiki.dreamhost.com/Installing_PHP5
+
+I changed a few lines, take a look at the revision history.
+
+License
+=======
+
+http://www.apache.org/licenses/LICENSE-2.0
 
 Revision history:
 ==================
- 2013-10-08 by Oleg Chirukhin (olegchir.com)
-           relicensed to ApacheLicense
-           latest PHP version, 
+```
+ 2013-10-08 by Oleg Chirukhin (olegchir.com, olegchiruhin@gmail.com)
+           Apache License, Version 2.0,
+           upgraded to the latest PHP version, 
            updated dependencies (except OpenSSL), 
            new command line options: --resume (skip base libs: it should be already compiled), --without-php, --without xdebug, --without-apc,
            raised wget redirect limit (for Sourceforge), disabled SSL checking for download servers,
-           no-ssl2 patch for PHP from debian butracker for 5.3 branch (disabled, we use latest version), 
+           no-ssl2 patch for PHP from debian butracker for 5.3 branch and no-ssl2 configure option for modern branches, 
            single PHP instance for all domains (template stored in ~/opt/php54/domain-template),
            TimeWeb hosting support
  2013-08-09 by Graham [http://blog.ham1.co.uk/] for latest PHP 5.4 and APC 3.1.13.
@@ -34,7 +47,4 @@ Revision history:
  2007-11-24 by Andrew (ajmconsulting.net) to allow 3rd wget line to pass 
           MCRYPT version information (was set as static download file name previously.)
  2006-12-25 by Carl McDade (hiveminds.co.uk) to allow memory limit and freetype
-
- Save the code to a file as *.sh
- Don't forget to chmod a+x it!
-
+```
