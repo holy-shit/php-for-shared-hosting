@@ -1,7 +1,7 @@
 php-for-shared-hosting
 ======================
 
-PHP installation script for shared hostings (Dreamhost, TimeWeb, etc)
+PHP installation script for shared hostings (you can manually build and install PHP 5, PHP 5.4, PHP 5.5, latest PHP from repository to Dreamhost, TimeWeb, etc)
 
 Download this script, chmod a+x it and run. It should "just work".
 
