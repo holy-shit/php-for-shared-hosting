@@ -21,14 +21,7 @@
 #
 # Revision history:
 # 2013-10-08 by Oleg Chirukhin (olegchir.com)
-#           relicensed to ApacheLicense
-#           latest PHP version, 
-#           updated dependencies (except OpenSSL), 
-#           new command line options: --resume (skip base libs: it should be already compiled), --without-php, --without xdebug, --without-apc,
-#           raised wget redirect limit (for Sourceforge), disabled SSL checking for download servers,
-#           no-ssl2 patch for PHP from debian butracker for 5.3 branch (disabled, we use latest version), 
-#           single PHP instance for all domains (template stored in ~/opt/php54/domain-template),
-#           TimeWeb hosting support
+#          a lot of changes, take a look at https://github.com/olegchir/php-for-shared-hosting/blob/master/README.md
 # 2013-08-09 by Graham [http://blog.ham1.co.uk/] for latest PHP 5.4 and APC 3.1.13.
 # 2013-05-02 by Krishna Desai (http://krishnadesai.com) for latest version of libmcrypt
 # 2012-10-05 by Leonid Komarovsky (http://leonid.komarovsky.info) for PHP 5.4 and latest version of Xdebug. Added PostgreSQL support.
@@ -74,9 +67,9 @@ done
 shift $(($OPTIND - 1))
 
 if [ "$STARTWITHPHP" != "true" ] ; then
-    echo "Full build mode. "
+    echo "Building all modules, including base like curl, m4, cclient, etc"
 else
-    echo "Resuming from PHP. "
+    echo "Resume from building main PHP code"
 fi
 
 
@@ -96,16 +89,16 @@ read tmp
 # Where do you want all this stuff built? I'd recommend picking a local filesystem.
 # ***Don't pick a directory that already exists!*** 
 # We clean up after ourselves at the end!
-SRCDIR=${HOME}/opt/php54/source
+SRCDIR=${HOME}/opt/php-latest/source
 
 # And where should it be installed?
-INSTALLDIR=${HOME}/opt/php54/prefix
+INSTALLDIR=${HOME}/opt/php-latest/prefix
 
 # Set DISTDIR to somewhere persistent, if you plan to muck around with this
 # script and run it several times!
-DISTDIR=${HOME}/opt/php54/dist
+DISTDIR=${HOME}/opt/php-latest/dist
 
-DOMAINTEMPLATE=${HOME}/opt/php54/domain-template
+DOMAINTEMPLATE=${HOME}/opt/php-latest/domain-template
 
 # Update version information here.
 PHP5="php5.5-latest" #MUST BE THE CURRENT VERSION

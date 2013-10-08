@@ -27,7 +27,7 @@ Revision history:
            new command line options: --resume (skip base libs: it should be already compiled), --without-php, --without xdebug, --without-apc,
            raised wget redirect limit (for Sourceforge), disabled SSL checking for download servers,
            no-ssl2 patch for PHP from debian butracker for 5.3 branch and no-ssl2 configure option for modern branches, 
-           single PHP instance for all domains (template stored in ~/opt/php54/domain-template),
+           single PHP instance for all domains (template stored in ~/opt/php-latest/domain-template),
            TimeWeb hosting support
  2013-08-09 by Graham [http://blog.ham1.co.uk/] for latest PHP 5.4 and APC 3.1.13.
  2013-05-02 by Krishna Desai (http://krishnadesai.com) for latest version of libmcrypt
