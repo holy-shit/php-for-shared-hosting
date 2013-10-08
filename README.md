@@ -23,7 +23,7 @@ Revision history:
  2013-10-08 by Oleg Chirukhin (olegchir.com, olegchiruhin@gmail.com)
            Apache License, Version 2.0,
            upgraded to the latest PHP version, 
-           updated dependencies (except OpenSSL), 
+           updated dependencies (except APC - it is broken in 5.5, still waiting for stable fix), 
            new command line options: --resume (skip base libs: it should be already compiled), --without-php, --without xdebug, --without-apc,
            raised wget redirect limit (for Sourceforge), disabled SSL checking for download servers,
            no-ssl2 patch for PHP from debian butracker for 5.3 branch and no-ssl2 configure option for modern branches, 
