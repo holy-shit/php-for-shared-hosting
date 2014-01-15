@@ -44,6 +44,16 @@
 #          MCRYPT version information (was set as static download file name previously.)
 # 2006-12-25 by Carl McDade (hiveminds.co.uk) to allow memory limit and freetype
 
+
+#Workarounds:
+#osdep.c:89:31: fatal error: security/pam_appl.h: No such file or directory
+# #include <security/pam_appl.h>
+#Ubuntu:
+#You're missing the pam dev files. In Debian use this command:
+#sudo apt-get install libpam0g-dev
+
+
+
 # Save the code to a file as *.sh
 # Don't forget to chmod a+x it!
 
@@ -59,15 +69,6 @@ if [ "$STARTWITHPHP" != "true" ] ; then
 else
     echo "Resume from building main PHP code"
 fi
-
-if [ $(package_used "php") == "y" ] ; then
-    echo "PHP = on"
-else
-    echo "PHP = off"
-fi
-
-exit 0
-
 
 # Where do you want all this stuff built? I'd recommend picking a local filesystem.
 # ***Don't pick a directory that already exists!***
@@ -160,15 +161,15 @@ read tmp
 if [ "$STARTWITHPHP" != "true" ] ; then
     rm -rf $SRCDIR
 else
-    if [ "$WITHOUT_PHP" != "true" ] ; then
+    if [ $(package_used "php") == "y" ] ; then
     rm -rf ${SRCDIR}/${PHP5}
     fi
 
-    if [ "$WITHOUT_XDEBUG" != "true" ] ; then
+    if [ $(package_used "xdebug") == "y" ] ; then
     rm -rf ${SRCDIR}/${XDEBUG}
     fi
 
-    if [ "$WITHOUT_APC" != "true" ] ; then
+    if [ $(package_used "apc") == "y" ] ; then
     rm -rf ${SRCDIR}/${APC}
     fi
 fi
@@ -238,7 +239,7 @@ fi
 
 # Get all the required packages FOR LATEST
 
-if [ "$WITHOUT_PHP" != "true" ] ; then
+if [ $(package_used "php") == "y" ] ; then
 if [ ! -f ${DISTDIR}/${PHP5}.tar.gz ]
 then
     rm -rf ${DISTDIR}/${PHP5_BASE_VERSION}*
@@ -246,14 +247,14 @@ then
 fi
 fi
 
-if [ "$WITHOUT_XDEBUG" != "true" ] ; then
+if [ $(package_used "xdebug") == "y" ] ; then
 if [ ! -f ${DISTDIR}/${XDEBUG}.tgz ]
 then
     $WGETCMD -c http://xdebug.org/files/${XDEBUG}.tgz
 fi
 fi
 
-if [ "$WITHOUT_APC" != "true" ] ; then
+if [ $(package_used "apc") == "y" ] ; then
 if [ ! -f ${DISTDIR}/${APC}.tgz ]
 then
     $WGETCMD -c http://pecl.php.net/get/${APC}.tgz
@@ -304,20 +305,20 @@ if [ "$STARTWITHPHP" != "true" ] ; then
     echo Done.
 fi
 
-if [ "$WITHOUT_PHP" != "true" ] ; then
+if [ $(package_used "php") == "y" ] ; then
 echo Extracting ${PHP5}...
 tar xzf ${DISTDIR}/${PHP5}.tar.gz
 mv ${SRCDIR}/${PHP5_BASE_VERSION}* ${SRCDIR}/${PHP5}
 echo Done.
 fi
 
-if [ "$WITHOUT_XDEBUG" != "true" ] ; then
+if [ $(package_used "xdebug") == "y" ] ; then
 echo Extracting ${XDEBUG}...
 tar xzf ${DISTDIR}/${XDEBUG}.tgz
 echo Done.
 fi
 
-if [ "$WITHOUT_APC" != "true" ] ; then
+if [ $(package_used "apc") == "y" ] ; then
 echo Extracting ${APC}...
 tar xzf ${DISTDIR}/${APC}.tgz
 echo Done.
@@ -400,7 +401,7 @@ if [ "$STARTWITHPHP" != "true" ] ; then
 
 fi
 
-if [ "$WITHOUT_PHP" != "true" ] ; then
+if [ $(package_used "php") == "y" ] ; then
 #PHP 5
 echo ###################
 echo Compile PHP
@@ -418,7 +419,7 @@ mkdir -p ${INSTALLDIR}/etc/php5/configs
 cp ${SRCDIR}/${PHP5}/php.ini-production ${INSTALLDIR}/etc/php5/configs/php.ini
 fi
 
-if [ "$WITHOUT_XDEBUG" != "true" ] ; then
+if [ $(package_used "xdebug") == "y" ] ; then
 # XDEBUG
 echo ###################
 echo Compile XDEBUG
@@ -438,7 +439,7 @@ cp modules/xdebug.so ${INSTALLDIR}/extensions
 echo "zend_extension=${INSTALLDIR}/extensions/xdebug.so" >> ${INSTALLDIR}/etc/php5/configs/xdebug.ini
 fi
 
-if [ "$WITHOUT_APC" != "true" ] ; then
+if [ $(package_used "apc") == "y" ] ; then
 # APC
 echo ###################
 echo Compile APC
