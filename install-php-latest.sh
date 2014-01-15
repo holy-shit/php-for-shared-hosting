@@ -1,4 +1,7 @@
 #!/bin/bash
+
+#. _DEBUG.sh
+
 #
 # PHP installation script for shared hostings
 #
@@ -48,7 +51,6 @@
 set -e
 
 . parse_args.sh
-
 
 if [ "$STARTWITHPHP" != "true" ] ; then
     echo "Building all modules, including base like curl, m4, cclient, etc"

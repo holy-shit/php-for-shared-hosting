@@ -105,6 +105,9 @@ for item in ${REQ_DISCARD_LIST[@]}; do
 done
 USE_LIST=$TEMP_USE_LIST
 
+TEMP_USE_LIST=$USE_LIST
+IFS=$'\n' read -rd '' -a TEMP_USE_LIST <<<"$TEMP_USE_LIST"
+
 echo "Computed uses:"
 for part in "${USE_LIST[@]}"; do
     echo $part
@@ -126,6 +129,9 @@ DISCARD_LIST=$TEMP_DISCARD_LIST
 TEMP_DISCARD_LIST=( ${DISCARD_LISTT[@]} ${REQ_DISCARD_LIST[@]} )
 DISCARD_LIST=$(printf "%s\n" "${TEMP_DISCARD_LIST[@]}" | sort -u)
 
+TEMP_DISCARD_LIST=$DISCARD_LIST
+IFS=$'\n' read -rd '' -a TEMP_DISCARD_LIST <<<"$TEMP_DISCARD_LIST"
+
 echo "Computed discards:"
 for part in "${DISCARD_LIST[@]}"; do
     echo $part
@@ -143,8 +149,6 @@ function array_contains() {
     echo "n"
     return 1
 }
-
-$(array_contains "${USE_LIST[@]}" "php")
 
 function package_used() {
     if [ $(array_contains "${USE_LIST[@]}" $1) == "y" ]; then
