@@ -37,7 +37,7 @@
 #          except kerberos) with Xdebug and APC
 # 2009-05-24 by ksmoe to correct copying of correct PHP cgi file (php-cgi instead of php)
 # 2009-04-25 by Daniel (whathuhstudios.com) for latest source versions
-# 2007-11-24 by Andrew (ajmconsulting.net) to allow 3rd wget line to pass 
+# 2007-11-24 by Andrew (ajmconsulting.net) to allow 3rd wget line to pass
 #          MCRYPT version information (was set as static download file name previously.)
 # 2006-12-25 by Carl McDade (hiveminds.co.uk) to allow memory limit and freetype
 
@@ -47,24 +47,8 @@
 # Abort on any errors
 set -e
 
-. getopts_long
+. parse_args
 
-OPTLIND=1
-while getopts_long ":r:p:x:a" option \
-resume no_argument \
-without-php no_argument \
-without-xdebug no_argument \
-without-apc no_argument \
-"" "$@"
-do
-    case "$option" in
-        r | resume)    STARTWITHPHP="true";;
-        p | without-php) WITHOUT_PHP="true";;
-        x | without-xdebug) WITHOUT_XDEBUG="true";;
-        a | without-apc) WITHOUT_APC="true";;
-    esac
-done
-shift $(($OPTIND - 1))
 
 if [ "$STARTWITHPHP" != "true" ] ; then
     echo "Building all modules, including base like curl, m4, cclient, etc"
@@ -72,22 +56,17 @@ else
     echo "Resume from building main PHP code"
 fi
 
-
-if [ "$WITHOUT_PHP" = "true" ] ; then
-    echo "Without PHP"
-fi
-if [ "$WITHOUT_XDEBUG" = "true" ] ; then
-    echo "Without XDebug"
-fi
-if [ "$WITHOUT_APC" = "true" ] ; then
-    echo "Without APC"
+if [ $(package_used "php") == "y" ] ; then
+    echo "PHP = on"
+else
+    echo "PHP = off"
 fi
 
-echo "Press any key to continue."
-read tmp
+exit 0
+
 
 # Where do you want all this stuff built? I'd recommend picking a local filesystem.
-# ***Don't pick a directory that already exists!*** 
+# ***Don't pick a directory that already exists!***
 # We clean up after ourselves at the end!
 SRCDIR=${HOME}/opt/php-latest/source
 
@@ -109,7 +88,7 @@ M4="m4-1.4.17"
 AUTOCONF="autoconf-2.69"
 CCLIENT="imap-2007f" #MUST BE THE CURRENT VERSION
 CCLIENT_DIR="imap-2007f"
-OPENSSL="openssl-1.0.1e"   
+OPENSSL="openssl-1.0.1e"
 OPENSSL_DIR=$OPENSSL
 LIBMCRYPT="2.5.8"
 LIBTOOL="libtool-2.4.2"
@@ -164,6 +143,14 @@ WGETCMD="wget --no-check-certificate --max-redirect=1000"
 
 # ---- end of user-editable bits. Hopefully! ----
 
+if [ "$INFO_MODE" = "true" ] ; then
+    echo "You requested to print information only. Exiting..."
+    exit 0
+fi
+
+echo "Press any key to continue."
+read tmp
+
 
 # Pre-download clean up!!!!
 if [ "$STARTWITHPHP" != "true" ] ; then
@@ -191,7 +178,7 @@ export EXTRA_LIBS="-lresolv"
 # set up directories
 mkdir -p ${SRCDIR}
 mkdir -p ${INSTALLDIR}
-if [ ! -f ${DISTDIR} ] 
+if [ ! -f ${DISTDIR} ]
 then
 mkdir -p ${DISTDIR}
 fi
@@ -200,38 +187,38 @@ cd ${DISTDIR}
 
 if [ "$STARTWITHPHP" != "true" ] ; then
 
-    if [ ! -f ${DISTDIR}/${CURL}.tar.gz ] 
+    if [ ! -f ${DISTDIR}/${CURL}.tar.gz ]
     then
         $WGETCMD -c http://curl.haxx.se/download/${CURL}.tar.gz
     fi
 
-    if [ ! -f ${DISTDIR}/${M4}.tar.gz ] 
+    if [ ! -f ${DISTDIR}/${M4}.tar.gz ]
     then
         $WGETCMD -c http://ftp.gnu.org/gnu/m4/${M4}.tar.gz
     fi
 
-    if [ ! -f ${DISTDIR}/${CCLIENT}.tar.Z ] 
+    if [ ! -f ${DISTDIR}/${CCLIENT}.tar.Z ]
     then
         $WGETCMD -c ftp://ftp.cac.washington.edu/imap/${CCLIENT}.tar.Z
     fi
 
-    if [ ! -f ${DISTDIR}/${OPENSSL}.tar.gz ] 
+    if [ ! -f ${DISTDIR}/${OPENSSL}.tar.gz ]
     then
         $WGETCMD -c http://www.openssl.org/source/${OPENSSL}.tar.gz
     fi
 
-    if [ ! -f ${DISTDIR}/${LIBMCRYPT}.tar.gz ] 
+    if [ ! -f ${DISTDIR}/${LIBMCRYPT}.tar.gz ]
     then
         $WGETCMD -c http://downloads.sourceforge.net/project/mcrypt/Libmcrypt/${LIBMCRYPT}/libmcrypt-${LIBMCRYPT}.tar.gz
     fi
 
-    if [ ! -f ${DISTDIR}/${LIBTOOL}.tar.gz ] 
+    if [ ! -f ${DISTDIR}/${LIBTOOL}.tar.gz ]
     then
         $WGETCMD -c http://ftp.gnu.org/gnu/libtool/${LIBTOOL}.tar.gz
     fi
 
 
-    if [ ! -f ${DISTDIR}/${AUTOCONF}.tar.gz ] 
+    if [ ! -f ${DISTDIR}/${AUTOCONF}.tar.gz ]
     then
         $WGETCMD -c http://ftp.gnu.org/gnu/autoconf/${AUTOCONF}.tar.gz
     fi
@@ -239,16 +226,16 @@ if [ "$STARTWITHPHP" != "true" ] ; then
 fi
 
 # Get all the required packages FOR STABLE VERSIONS
-#if [ ! -f ${DISTDIR}/${PHP5}.tar.gz ] 
+#if [ ! -f ${DISTDIR}/${PHP5}.tar.gz ]
 #then
-#    $WGETCMD -c http://us.php.net/get/${PHP5}.tar.gz/from/this/mirror/ 
+#    $WGETCMD -c http://us.php.net/get/${PHP5}.tar.gz/from/this/mirror/
 #    mv index.html ${PHP5}.tar.gz
 #fi
 
-# Get all the required packages FOR LATEST 
+# Get all the required packages FOR LATEST
 
 if [ "$WITHOUT_PHP" != "true" ] ; then
-if [ ! -f ${DISTDIR}/${PHP5}.tar.gz ] 
+if [ ! -f ${DISTDIR}/${PHP5}.tar.gz ]
 then
     rm -rf ${DISTDIR}/${PHP5_BASE_VERSION}*
     $WGETCMD -O ${DISTDIR}/${PHP5}.tar.gz -c http://snaps.php.net/${PHP5}.tar.gz
@@ -256,21 +243,21 @@ fi
 fi
 
 if [ "$WITHOUT_XDEBUG" != "true" ] ; then
-if [ ! -f ${DISTDIR}/${XDEBUG}.tgz ] 
+if [ ! -f ${DISTDIR}/${XDEBUG}.tgz ]
 then
     $WGETCMD -c http://xdebug.org/files/${XDEBUG}.tgz
 fi
 fi
 
 if [ "$WITHOUT_APC" != "true" ] ; then
-if [ ! -f ${DISTDIR}/${APC}.tgz ] 
+if [ ! -f ${DISTDIR}/${APC}.tgz ]
 then
     $WGETCMD -c http://pecl.php.net/get/${APC}.tgz
 fi
 fi
 
 # FOR PHP 5.3 branch
-#if [ ! -f ${DISTDIR}/debian_patches_disable_SSLv2_for_openssl_1_0_0.patch ] 
+#if [ ! -f ${DISTDIR}/debian_patches_disable_SSLv2_for_openssl_1_0_0.patch ]
 #then
 #    $WGETCMD -O ${DISTDIR}/debian_patches_disable_SSLv2_for_openssl_1_0_0.patch -c http://bugs.php.net/patch-display.php\?bug_id\=54736\&patch\=debian_patches_disable_SSLv2_for_openssl_1_0_0.patch\&revision\=1305414559\&download\=1
 #fi
@@ -470,7 +457,7 @@ cp ${INSTALLDIR}/bin/php-cgi ${DOMAINTEMPLATE}/cgi-bin/php.cgi
 rm -rf $SRCDIR $DISTDIR
 
 # Create .htaccess
-if [ -f ${DOMAINTEMPLATE}/.htaccess ] 
+if [ -f ${DOMAINTEMPLATE}/.htaccess ]
     then
     echo #
     echo '#####################################################################'
@@ -489,10 +476,10 @@ echo '<FilesMatch "^php5?\.(ini|cgi)$">' >> ${DOMAINTEMPLATE}/.htaccess
 echo 'Order Deny,Allow' >> ${DOMAINTEMPLATE}/.htaccess
 echo 'Deny from All' >> ${DOMAINTEMPLATE}/.htaccess
 echo 'Allow from env=REDIRECT_STATUS' >> ${DOMAINTEMPLATE}/.htaccess
-echo '</FilesMatch>' >> ${DOMAINTEMPLATE}/.htaccess 
+echo '</FilesMatch>' >> ${DOMAINTEMPLATE}/.htaccess
 
 echo ---------- INSTALL COMPLETE! ----------
-echo 
+echo
 echo 'Configuration files:'
 echo "1) General PHP -> ${INSTALLDIR}/etc/php5/configs/php.ini"
 echo "2) Xdebug conf -> ${INSTALLDIR}/etc/php5/configs/xdebug.ini"
