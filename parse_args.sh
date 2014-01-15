@@ -50,8 +50,8 @@ REQ_USE_LIST=$(printf "%s\n" "${NU_REQ_USE_LIST[@]}" | sort -u)
 #http://stackoverflow.com/questions/13648410/how-can-i-get-unique-values-from-an-array-in-linux-bash
 
 echo "Requested uses:"
-for part in "${REQ_USE_LIST[@]}"; do
-    echo $part
+for part in ${REQ_USE_LIST[@]}; do
+    echo "    $part"
 done
 
 split_on_comma $REQ_DISCARD_LIST_RAW
@@ -59,8 +59,8 @@ NU_REQ_DISCARD_LIST=$return_of_split_on_comma
 REQ_DISCARD_LIST=$(printf "%s\n" "${NU_REQ_DISCARD_LIST[@]}" | sort -u)
 
 echo "Requested discards:"
-for part in "${REQ_DISCARD_LIST[@]}"; do
-    echo $part
+for part in ${REQ_DISCARD_LIST[@]}; do
+    echo "    $part"
 done
 
 split_on_comma $DEF_USE_LIST_RAW
@@ -68,8 +68,8 @@ NU_DEF_USE_LIST=$return_of_split_on_comma
 DEF_USE_LIST=$(printf "%s\n" "${NU_DEF_USE_LIST[@]}" | sort -u)
 
 echo "Default uses:"
-for part in "${DEF_USE_LIST[@]}"; do
-    echo $part
+for part in ${DEF_USE_LIST[@]}; do
+    echo "    $part"
 done
 
 split_on_comma $DEF_DISCARD_LIST_RAW
@@ -77,8 +77,8 @@ NU_DEF_DISCARD_LIST=$return_of_split_on_comma
 DEF_DISCARD_LIST=$(printf "%s\n" "${NU_DEF_DISCARD_LIST[@]}" | sort -u)
 
 echo "Default discards:"
-for part in "${DEF_DISCARD_LIST[@]}"; do
-    echo $part
+for part in ${DEF_DISCARD_LIST[@]}; do
+    echo "    $part"
 done
 
 #Compute USE_LIST
@@ -105,12 +105,13 @@ for item in ${REQ_DISCARD_LIST[@]}; do
 done
 USE_LIST=$TEMP_USE_LIST
 
-TEMP_USE_LIST=$USE_LIST
-IFS=$'\n' read -rd '' -a TEMP_USE_LIST <<<"$TEMP_USE_LIST"
+TEMP_USE_LIST=$(printf "$USE_LIST" | tr '\n' ' ' | xargs)
+USE_LIST=$TEMP_USE_LIST
+#http://stackoverflow.com/questions/10618798/removing-new-line-character-from-incoming-stream-using-sed
 
 echo "Computed uses:"
-for part in "${USE_LIST[@]}"; do
-    echo $part
+for part in ${USE_LIST[@]}; do
+    echo "    $part"
 done
 
 #Compute DISCARD_LIST
@@ -129,19 +130,19 @@ DISCARD_LIST=$TEMP_DISCARD_LIST
 TEMP_DISCARD_LIST=( ${DISCARD_LISTT[@]} ${REQ_DISCARD_LIST[@]} )
 DISCARD_LIST=$(printf "%s\n" "${TEMP_DISCARD_LIST[@]}" | sort -u)
 
-TEMP_DISCARD_LIST=$DISCARD_LIST
-IFS=$'\n' read -rd '' -a TEMP_DISCARD_LIST <<<"$TEMP_DISCARD_LIST"
+TEMP_DISCARD_LIST=$(printf "$DISCARD_LIST" | tr '\n' ' ' | xargs)
+DISCARD_LIST=$TEMP_DISCARD_LIST
 
 echo "Computed discards:"
-for part in "${DISCARD_LIST[@]}"; do
-    echo $part
+for part in ${DISCARD_LIST[@]}; do
+    echo "    $part"
 done
 
-function array_contains() {
+function array_contains {
     local n=$#
     local value=${!n}
     for ((i=1;i < $#;i++)) {
-        if [ "${!i}" == "${value}" ]; then
+        if [ "${!i}" == "${value}" ] ; then
             echo "y"
             return 0
         fi
@@ -150,8 +151,8 @@ function array_contains() {
     return 1
 }
 
-function package_used() {
-    if [ $(array_contains "${USE_LIST[@]}" $1) == "y" ]; then
+function package_used {
+    if [ $(array_contains ${USE_LIST[@]} $1) == "y" ] ; then
         echo "y"
         return 1
     else
@@ -160,8 +161,8 @@ function package_used() {
     fi
 }
 
-function package_discarded() {
-    if [ $(array_contains "${DISCARD_LIST[@]}" $1) == "y" ]; then
+function package_discarded {
+    if [ $(array_contains ${DISCARD_LIST[@]} $1) == "y" ] ; then
         echo "y"
         return 1
     else

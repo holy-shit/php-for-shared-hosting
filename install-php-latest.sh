@@ -52,6 +52,8 @@ set -e
 
 . parse_args.sh
 
+echo "Parsing arguments done"
+
 if [ "$STARTWITHPHP" != "true" ] ; then
     echo "Building all modules, including base like curl, m4, cclient, etc"
 else
