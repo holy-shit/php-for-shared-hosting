@@ -47,7 +47,7 @@
 # Abort on any errors
 set -e
 
-. parse_args
+. parse_args.sh
 
 
 if [ "$STARTWITHPHP" != "true" ] ; then

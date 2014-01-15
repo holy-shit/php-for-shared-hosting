@@ -9,7 +9,7 @@ REQ_DISCARD_LIST_RAW=""
 DEF_USE_LIST_RAW="php,xdebug"
 DEF_DISCARD_LIST_RAW="apc"
 
-. getopts_long
+. getopts_long.sh
 
 OPTLIND=1
 while getopts_long ":r:u:d" option \
