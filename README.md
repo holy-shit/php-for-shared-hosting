@@ -1,3 +1,8 @@
+(DEPRECATED)
+============
+
+for historical purposes only
+
 php-for-shared-hosting
 ======================
 
